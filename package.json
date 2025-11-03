@@ -1,0 +1,18 @@
+{
+  "name": "logseq-cleanup-orphans",
+  "version": "0.0.1",
+  "description": "Automatically remove orphaned pages from Logseq with a keyboard shortcut and toolbar button",
+  "main": "index.html",
+  "author": "Geir Sagberg",
+  "license": "MIT",
+  "logseq": {
+    "id": "logseq-cleanup-orphans",
+    "icon": "./icon.png"
+  },
+  "keywords": [
+    "logseq",
+    "plugin",
+    "cleanup",
+    "orphaned-pages"
+  ]
+}
