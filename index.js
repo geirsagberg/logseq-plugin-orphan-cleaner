@@ -47,10 +47,8 @@ async function removeOrphanedPages() {
       return;
     }
 
-    const confirmed = await logseq.UI.confirm(
-      `Found ${orphanedPages.length} orphaned page${orphanedPages.length > 1 ? 's' : ''}. Delete ${orphanedPages.length > 1 ? 'them' : 'it'}?`,
-      'Cleanup Orphaned Pages',
-      { confirmButtonLabel: 'Delete', cancelButtonLabel: 'Cancel' }
+    const confirmed = window.confirm(
+      `Found ${orphanedPages.length} orphaned page${orphanedPages.length > 1 ? 's' : ''}. Delete ${orphanedPages.length > 1 ? 'them' : 'it'}?`
     );
 
     if (confirmed) {
