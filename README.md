@@ -1,4 +1,4 @@
-# Logseq Cleanup Orphans Plugin
+# Logseq Plugin: Orphan Cleaner
 
 Automatically remove orphaned pages from Logseq with a keyboard shortcut and toolbar button.
 
@@ -44,7 +44,7 @@ This plugin identifies "orphaned" pages using the same logic as Logseq's built-i
 2. Open Logseq and go to Settings → Advanced → Developer mode
 3. Enable "Developer mode"
 4. Go to Settings → Plugins → Load unpacked plugin
-5. Select the `logseq-cleanup-orphans` directory
+5. Select the `logseq-plugin-orphan-cleaner` directory
 
 ### From Marketplace (Coming Soon)
 

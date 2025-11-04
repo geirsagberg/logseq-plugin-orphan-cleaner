@@ -2,7 +2,7 @@
   "title": "Orphan Cleaner",
   "description": "Automatically remove orphaned pages from Logseq with a keyboard shortcut and toolbar button",
   "author": "geirsagberg",
-  "repo": "geirsagberg/logseq-cleanup-orphans",
+  "repo": "geirsagberg/logseq-plugin-orphan-cleaner",
   "icon": "./icon.png",
   "theme": false
 }
