@@ -116,7 +116,7 @@ function main() {
   logseq.App.registerUIItem('toolbar', {
     key: 'cleanup-orphans-button',
     template: `
-      <a data-on-click="removeOrphans" class="button" title="Remove orphaned pages (Cmd/Ctrl+Shift+O)">
+      <a data-on-click="removeOrphans" class="button" title="Remove orphaned pages">
         <i class="ti ti-file-broken"></i>
       </a>
     `
