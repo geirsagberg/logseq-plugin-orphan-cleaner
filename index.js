@@ -117,7 +117,7 @@ function main() {
     key: 'cleanup-orphans-button',
     template: `
       <a data-on-click="removeOrphans" class="button" title="Remove orphaned pages (Cmd/Ctrl+Shift+O)">
-        <i class="ti ti-trash"></i>
+        <i class="ti ti-file-broken"></i>
       </a>
     `
   });
