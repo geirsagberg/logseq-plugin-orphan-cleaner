@@ -19,7 +19,10 @@
   "scripts": {
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "bump:patch": "npm version patch -m \"chore: bump version to %s\"",
+    "bump:minor": "npm version minor -m \"chore: bump version to %s\"",
+    "bump:major": "npm version major -m \"chore: bump version to %s\""
   },
   "devDependencies": {
     "@vitest/coverage-v8": "4.0.7",
