@@ -1,5 +1,43 @@
 import { describe, it, expect, vi } from 'vitest';
-import { isPageEmpty, hasNoLinkedReferences, findOrphanedPages } from './index.js';
+import { SPECIAL_PAGES, isSpecialPage, isPageEmpty, hasNoLinkedReferences, findOrphanedPages } from './index.js';
+
+describe('isSpecialPage', () => {
+  it('should return true for journal pages', () => {
+    const page = { name: '2025-11-04', 'journal?': true };
+    expect(isSpecialPage(page)).toBe(true);
+  });
+
+  it('should return true for logseq system pages', () => {
+    const page = { name: 'logseq/config', 'journal?': false };
+    expect(isSpecialPage(page)).toBe(true);
+  });
+
+  it('should return true for contents page', () => {
+    const page = { name: 'contents', 'journal?': false };
+    expect(isSpecialPage(page)).toBe(true);
+  });
+
+  it('should return true for favorites page', () => {
+    const page = { name: 'favorites', 'journal?': false };
+    expect(isSpecialPage(page)).toBe(true);
+  });
+
+  it('should return true for card page', () => {
+    const page = { name: 'card', 'journal?': false };
+    expect(isSpecialPage(page)).toBe(true);
+  });
+
+  it('should be case-insensitive for special pages', () => {
+    expect(isSpecialPage({ name: 'Contents', 'journal?': false })).toBe(true);
+    expect(isSpecialPage({ name: 'FAVORITES', 'journal?': false })).toBe(true);
+    expect(isSpecialPage({ name: 'Card', 'journal?': false })).toBe(true);
+  });
+
+  it('should return false for regular pages', () => {
+    const page = { name: 'my-page', 'journal?': false };
+    expect(isSpecialPage(page)).toBe(false);
+  });
+});
 
 describe('isPageEmpty', () => {
   it('should return true for page with no blocks', () => {
@@ -56,6 +94,12 @@ describe('isPageEmpty', () => {
     const blocks = [];
 
     expect(isPageEmpty(page, blocks)).toBe(false);
+  });
+
+  it('should return false for special pages (contents, favorites, card)', () => {
+    expect(isPageEmpty({ name: 'contents', 'journal?': false }, [])).toBe(false);
+    expect(isPageEmpty({ name: 'favorites', 'journal?': false }, [])).toBe(false);
+    expect(isPageEmpty({ name: 'card', 'journal?': false }, [])).toBe(false);
   });
 
   it('should return false for pages with multiple blocks', () => {
@@ -173,6 +217,26 @@ describe('findOrphanedPages', () => {
         getAllPages: vi.fn().mockResolvedValue([
           { name: 'logseq/config', 'journal?': false },
           { name: 'logseq/pages', 'journal?': false },
+          { name: 'empty-page', 'journal?': false }
+        ]),
+        getPageBlocksTree: vi.fn().mockResolvedValue([]),
+        getPageLinkedReferences: vi.fn().mockResolvedValue([])
+      }
+    };
+
+    const orphans = await findOrphanedPages(mockApi);
+
+    expect(orphans).toEqual(['empty-page']);
+    expect(mockApi.Editor.getPageBlocksTree).toHaveBeenCalledTimes(1);
+  });
+
+  it('should skip special pages (contents, favorites, card)', async () => {
+    const mockApi = {
+      Editor: {
+        getAllPages: vi.fn().mockResolvedValue([
+          { name: 'contents', 'journal?': false },
+          { name: 'favorites', 'journal?': false },
+          { name: 'card', 'journal?': false },
           { name: 'empty-page', 'journal?': false }
         ]),
         getPageBlocksTree: vi.fn().mockResolvedValue([]),

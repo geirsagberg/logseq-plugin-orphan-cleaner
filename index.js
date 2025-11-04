@@ -1,5 +1,13 @@
+const SPECIAL_PAGES = ['contents', 'favorites', 'card'];
+
+function isSpecialPage(page) {
+  return page['journal?'] ||
+         page.name.startsWith('logseq/') ||
+         SPECIAL_PAGES.includes(page.name.toLowerCase());
+}
+
 function isPageEmpty(page, blocks) {
-  if (page['journal?'] || page.name.startsWith('logseq/')) {
+  if (isSpecialPage(page)) {
     return false;
   }
 
@@ -26,7 +34,7 @@ async function findOrphanedPages(api) {
   const orphanedPages = [];
 
   for (const page of allPages) {
-    if (page['journal?'] || page.name.startsWith('logseq/')) {
+    if (isSpecialPage(page)) {
       continue;
     }
 
@@ -120,5 +128,5 @@ if (typeof logseq !== 'undefined') {
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { isPageEmpty, hasNoLinkedReferences, findOrphanedPages };
+  module.exports = { SPECIAL_PAGES, isSpecialPage, isPageEmpty, hasNoLinkedReferences, findOrphanedPages };
 }

@@ -19,6 +19,7 @@ This plugin identifies "orphaned" pages using the same logic as Logseq's built-i
   - Or has only a single block that is empty, whitespace, "-", or "*"
 - Is not a journal page
 - Is not a system page (logseq/*)
+- Is not a special page (contents, favorites, card)
 
 ## Installation
 
