@@ -1,41 +1,41 @@
 import { describe, it, expect, vi } from 'vitest';
-import { SPECIAL_PAGES, isSpecialPage, isPageEmpty, hasNoLinkedReferences, findOrphanedPages } from './index.js';
+import { SPECIAL_PAGES, isSystemPage, isPageEmpty, hasNoLinkedReferences, findOrphanedPages } from './index.js';
 
-describe('isSpecialPage', () => {
-  it('should return true for journal pages', () => {
+describe('isSystemPage', () => {
+  it('should return false for journal pages', () => {
     const page = { name: '2025-11-04', 'journal?': true };
-    expect(isSpecialPage(page)).toBe(true);
+    expect(isSystemPage(page)).toBe(false);
   });
 
   it('should return true for logseq system pages', () => {
     const page = { name: 'logseq/config', 'journal?': false };
-    expect(isSpecialPage(page)).toBe(true);
+    expect(isSystemPage(page)).toBe(true);
   });
 
   it('should return true for contents page', () => {
     const page = { name: 'contents', 'journal?': false };
-    expect(isSpecialPage(page)).toBe(true);
+    expect(isSystemPage(page)).toBe(true);
   });
 
   it('should return true for favorites page', () => {
     const page = { name: 'favorites', 'journal?': false };
-    expect(isSpecialPage(page)).toBe(true);
+    expect(isSystemPage(page)).toBe(true);
   });
 
   it('should return true for card page', () => {
     const page = { name: 'card', 'journal?': false };
-    expect(isSpecialPage(page)).toBe(true);
+    expect(isSystemPage(page)).toBe(true);
   });
 
   it('should be case-insensitive for special pages', () => {
-    expect(isSpecialPage({ name: 'Contents', 'journal?': false })).toBe(true);
-    expect(isSpecialPage({ name: 'FAVORITES', 'journal?': false })).toBe(true);
-    expect(isSpecialPage({ name: 'Card', 'journal?': false })).toBe(true);
+    expect(isSystemPage({ name: 'Contents', 'journal?': false })).toBe(true);
+    expect(isSystemPage({ name: 'FAVORITES', 'journal?': false })).toBe(true);
+    expect(isSystemPage({ name: 'Card', 'journal?': false })).toBe(true);
   });
 
   it('should return false for regular pages', () => {
     const page = { name: 'my-page', 'journal?': false };
-    expect(isSpecialPage(page)).toBe(false);
+    expect(isSystemPage(page)).toBe(false);
   });
 });
 
@@ -82,11 +82,11 @@ describe('isPageEmpty', () => {
     expect(isPageEmpty(page, blocks)).toBe(false);
   });
 
-  it('should return false for journal pages', () => {
+  it('should return true for empty journal pages', () => {
     const page = { name: '2025-11-03', 'journal?': true };
     const blocks = [];
 
-    expect(isPageEmpty(page, blocks)).toBe(false);
+    expect(isPageEmpty(page, blocks)).toBe(true);
   });
 
   it('should return false for logseq system pages', () => {
@@ -192,7 +192,7 @@ describe('findOrphanedPages', () => {
     expect(orphans).toEqual(['empty-no-refs']);
   });
 
-  it('should skip journal pages', async () => {
+  it('should include empty journal pages with no references', async () => {
     const mockApi = {
       Editor: {
         getAllPages: vi.fn().mockResolvedValue([
@@ -206,9 +206,8 @@ describe('findOrphanedPages', () => {
 
     const orphans = await findOrphanedPages(mockApi);
 
-    expect(orphans).toEqual(['empty-page']);
-    expect(mockApi.Editor.getPageBlocksTree).toHaveBeenCalledTimes(1);
-    expect(mockApi.Editor.getPageBlocksTree).toHaveBeenCalledWith('empty-page');
+    expect(orphans).toEqual(['2025-11-03', 'empty-page']);
+    expect(mockApi.Editor.getPageBlocksTree).toHaveBeenCalledTimes(2);
   });
 
   it('should skip logseq system pages', async () => {
@@ -266,23 +265,23 @@ describe('findOrphanedPages', () => {
     expect(orphans).toEqual([]);
   });
 
-  it('should return empty array when all pages are journals', async () => {
+  it('should detect empty journal pages as orphans', async () => {
     const mockApi = {
       Editor: {
         getAllPages: vi.fn().mockResolvedValue([
           { name: '2025-11-01', 'journal?': true },
           { name: '2025-11-02', 'journal?': true }
         ]),
-        getPageBlocksTree: vi.fn(),
-        getPageLinkedReferences: vi.fn()
+        getPageBlocksTree: vi.fn().mockResolvedValue([]),
+        getPageLinkedReferences: vi.fn().mockResolvedValue([])
       }
     };
 
     const orphans = await findOrphanedPages(mockApi);
 
-    expect(orphans).toEqual([]);
-    expect(mockApi.Editor.getPageBlocksTree).not.toHaveBeenCalled();
-    expect(mockApi.Editor.getPageLinkedReferences).not.toHaveBeenCalled();
+    expect(orphans).toEqual(['2025-11-01', '2025-11-02']);
+    expect(mockApi.Editor.getPageBlocksTree).toHaveBeenCalledTimes(2);
+    expect(mockApi.Editor.getPageLinkedReferences).toHaveBeenCalledTimes(2);
   });
 
   it('should identify pages with dash-only content as empty if no refs', async () => {

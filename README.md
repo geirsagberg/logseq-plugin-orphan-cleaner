@@ -8,7 +8,7 @@ Automatically remove orphaned pages from Logseq with a keyboard shortcut and too
 - **Toolbar Button**: Click the trash icon in the toolbar for quick access
 - **Smart Detection**: Identifies empty/orphaned pages that have no meaningful content
 - **Safe Deletion**: Shows confirmation dialog with count before deleting
-- **Excludes Special Pages**: Automatically skips journal pages and system pages (logseq/*)
+- **Excludes Special Pages**: Automatically skips system pages (logseq/*) and special pages (contents, favorites, card)
 
 ## What are Orphaned Pages?
 
@@ -17,9 +17,10 @@ This plugin identifies "orphaned" pages using the same logic as Logseq's built-i
 - Has no meaningful content:
   - Completely empty (no blocks)
   - Or has only a single block that is empty, whitespace, "-", or "*"
-- Is not a journal page
 - Is not a system page (logseq/*)
 - Is not a special page (contents, favorites, card)
+
+**Note:** Empty journal pages with no references will also be removed, matching Logseq's built-in behavior.
 
 ## Installation
 
@@ -54,7 +55,7 @@ Click the trash icon in the Logseq toolbar to trigger the cleanup process.
 ## How It Works
 
 1. The plugin scans all pages in your graph
-2. For each page (excluding journal and system pages), it checks:
+2. For each page (excluding system pages like logseq/* and special pages), it checks:
    - **Is the page empty?**
      - Has no blocks at all
      - Or has a single block with no meaningful content (empty, "-", "*", or whitespace)
