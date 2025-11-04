@@ -1,6 +1,6 @@
 {
   "name": "logseq-plugin-orphan-cleaner",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Automatically remove orphaned pages from Logseq with a keyboard shortcut and toolbar button",
   "main": "index.html",
   "author": "Geir Sagberg",
